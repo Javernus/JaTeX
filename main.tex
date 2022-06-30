@@ -1,0 +1,237 @@
+%-------------------------------------------------------------------------------
+% LATEX TEMPLATE ARTIKEL
+%-------------------------------------------------------------------------------
+% Dit template is voor gebruik door studenten van de de bacheloropleiding
+% Informatica van de Universiteit van Amsterdam.
+% Voor informatie over schrijfvaardigheden, zie
+%                               https://practicumav.nl/schrijven/index.html
+%
+%-------------------------------------------------------------------------------
+%	PACKAGES EN DOCUMENT CONFIGURATIE
+%-------------------------------------------------------------------------------
+
+\documentclass{jatex-article}
+\usepackage[english]{babel}
+
+\usepackage[style=authoryear-comp]{biblatex}
+% \addbibresource{references.bib}
+
+%-------------------------------------------------------------------------------
+%	GEGEVENS VOOR IN DE TITEL, HEADER EN FOOTER
+%-------------------------------------------------------------------------------
+
+% Geef je artikel een logische titel die de inhoud dekt.
+\title{Mesh Relay Chat}
+
+\assignment{Individual Report Multimedia}
+\assignmenttype{Projectplan}
+\documenttype{report}
+
+\authors{Jake Jongejans; (with Ilya Claassen; Merijn Laks; Scott Scherpenzeel)}
+\uvanetids{13622552; }
+
+\tutor{Floor van de Leur, Koen van Elsen, Daan Kruis}
+\docent{Taco Walstra}
+
+% Vul hier de naam van je tutorgroep, werkgroep, of practicumgroep in.
+\group{MRC Alliance (12)}
+
+\course{Multimedia}
+\courseid{5062MULT5Y}
+
+\date{\today}
+
+\begin{document}
+\justify{}
+\maketitle
+
+Mesh Relay Chat, \textit{MRC} for short, is a new chat client that is
+disconnected, decentralised, secure and anonymous. It uses a mesh network on
+the Meshtastic framework to stay disconnected from the world-wide internet and
+instead use the \textit{LoRa} wireless frequencies to communicate. This allows
+users to communicate when in relative proximity to one another, but the
+technology can also support long range communication over many kilometres. MRC
+is decentralised because of the homogeneous nature of the mesh, as each user
+has the same function as node on the network. It is anonymous and secure as no
+IDing is taking place and all data is encrypted using \texttt{AES256}
+encryption, both over the air and on device where messages are stored.
+
+\section*{Project Choices}
+
+As Project Manager, I planned for an MVP in week one, keeping ample time for
+set-backs and difficulties along the way. This proved to be a necessity. We
+were on track for the front-end of the application, but setting up the mesh
+network took longer than expected, and building an interface between Python and
+Rust did not prove as easy as one would wish it was.
+
+All in all, we reached our MVP in week two, after which we made the decision to
+polish the application rather than add more features. This certainly should be
+any teams' first priority.
+
+Along the way, we have iterated over our encryption choices, how we let the
+data in our application flow and the
+
+\section*{Wi-Fi, BLE or LoRa}
+
+We have debated three wireless technologies, those being Wi-Fi, Bluetooth Low
+Energy and LoRa. There are significant upsides and downsides to using either of
+these technologies, as can be seen in Table \ref{wifiblelora}.
+
+\begin{table}[h]
+  \centering
+  \begin{tabular}{r | c | c | c |}
+    \cline{2-4}
+                & BLE   & Wi-Fi & LoRa \\ \cline{2-4}
+    Range       & Short & Short & Long \\
+    Bandwidth   & Low   & High  & Tiny \\
+    Power Usage & Low   & High  & Low  \\ \cline{2-4}
+  \end{tabular}
+  \caption{Comparison between BLE, Wi-Fi and LoRa.}
+  \label{wifiblelora}
+\end{table}
+
+We are still working out which of these wireless technologies we want to
+utilise for MRC, taking into consideration the research we are doing and the
+requirements for MRC to function properly.
+
+\section*{Hardware support}
+
+Given the modularity that can be built into MRC, it is possible to create
+simple but effective embedded code for any device with the proper capabilities,
+like the wireless technology we end up choosing.
+
+Because of its wide availability, cost-effectiveness and ease-of-use, we have
+decided to use the ESP32 micro controller, which has bluetooth and wifi built
+in. ESP8266 can also be used, as it is the predecessor of the ESP32 and has
+almost an identical architecture. Additionally, some boards using the ESP32,
+like the TTGO LoRa32 OLED board, can be used for additional features ranging
+from better I/O to a built in screen to LoRa capabilities.
+
+\section*{Realism and alternatives}
+
+Given the possible complexity of MRC, we will have to practice care to estimate
+the realism of the project. The main cause for complexity will be in
+limitations of bandwidth and in the difficulty of programming with the chosen
+wireless technology. We are accounting for hidden road blocks in our planning,
+leaving ample time for us to handle slow-downs and set-backs.
+
+We aim to have a product by week one, leaving week two for testing, bug fixing,
+polishing and if time allows it, creating firmware for more devices so they can
+also utilise the MRC network. It also grants us generous time to invest in
+writing our individual reports.
+
+Week one focusses on UI and setting up the Mesh Network, of which implementing
+the Host of the MRC is part. Then, encryption and add-on modules can be built
+to allow extra functionality like sending images, audio.
+
+To ascertain a project, we thought of a backup plan. The backup plan entails
+the making of a piece of hardware capable of scrambling audio input from a
+microphone. This is done so any internet-connected device does not have access
+to the original audio in any way, shape or form.
+
+\section*{Roles}
+
+To ascertain a fluid and effective development sprint, we have decided to
+create roles with responsibilities.
+
+The Product Manager keeps track of the state of the project and must make sure
+to uphold the progress. They do not deal with the code written, but the product
+as it will be used. This role is given to ....
+
+The Code Manager upholds the quality of the code. They manage the git
+environment and are the only person allowed to merge Pull Requests. This role
+is handed to Jake.
+
+\section*{Planning}
+
+The planning can be found in Figure \ref{planning}.
+
+\begin{figure}[!ht]
+  \begin{center}
+    \centerline{
+      \begin{ganttchart}[
+          y unit title=0.5cm,
+          y unit chart=0.5cm,
+          x unit=0.25cm,
+          canvas/.style={fill={rgb,255:red,19;green,38;blue,42},draw={rgb,255:red,141;green,178;blue,185}},
+          title label font=\color{rgb,255:red,240;green,255;blue,255},
+          title/.style={fill={rgb,255:red,19;green,38;blue,42}},
+          link/.style={->,draw={rgb,255:red,224;green,16;blue,34}},
+          title label anchor/.style={below=-1.6ex},
+          title height=1,
+          progress label text={},
+          group right shift=0,
+          group top shift=.6,
+          bar height=0.7,
+          bar/.append style={fill={rgb,255:red,95;green,150;blue,125}},
+          bar incomplete/.append style={fill={rgb,255:red,89;green,100;blue,112}},
+          group height=[.3]{1}{56},
+
+          \setganttlinklabel{f-s}{}
+          %labels
+          \gantttitle{Project}{56} \\
+          \gantttitle{Preparations}{56} \\
+
+          %tasks
+          \ganttbar[progress=60]{Audio Research}{1}{56} \\
+          \ganttbar[progress=100]{BLE Research}{1}{56} \\
+          \ganttbar[progress=60]{Wi-Fi Research}{1}{56} \\
+          \ganttbar[progress=100]{LoRa Research}{1}{56} \\
+          \ganttbar[progress=90]{Projectplan}{1}{56} \\
+
+          \gantttitle{}{56} \\
+          \gantttitle{Week 1}{56} \\
+          \gantttitle{Day 1}{8}
+          \gantttitle{Day 2}{8}
+          \gantttitle{Day 3}{8}
+          \gantttitle{Day 4}{8}
+          \gantttitle{Day 5}{8}
+          \gantttitle{Weekend}{16} \\
+
+          %tasks
+          \ganttbar[progress=0,name=meshnw]{Mesh Network}{3}{16} \\
+          \ganttbar[progress=0,name=mnwpolish]{Mesh Network Polish}{17}{24} \\
+          \ganttbar[progress=0,name=hostimplementation]{Host Implementation}{13}{24} \\
+          \ganttbar[progress=0,name=uife]{UI Frontend}{3}{16} \\
+          \ganttbar[progress=0,name=uibe]{UI Backend}{21}{32} \\
+          \ganttbar[progress=0,name=encryption]{Encryption}{13}{32} \\
+          \ganttbar[progress=0]{Modules}{21}{40} \\
+
+          %relations
+          \ganttlink[link type=f-s]{meshnw}{mnwpolish}
+          \ganttlink{meshnw}{hostimplementation}
+          \ganttlink{hostimplementation}{uibe}
+          \ganttlink{uife}{uibe}
+          \ganttlink{hostimplementation}{encryption}
+
+          \gantttitle{}{56} \\
+          \gantttitle{Week 2}{56} \\
+          \gantttitle{Day 8}{8}
+          \gantttitle{Day 9}{8}
+          \gantttitle{Day 10}{8}
+          \gantttitle{Day 11}{8}
+          \gantttitle{Day 12}{8}
+          \gantttitle{Holidays!}{16} \\
+
+          %tasks
+          \ganttbar[progress=0]{Polishing}{1}{24} \\
+          \ganttbar[progress=0]{Bug fixing}{1}{24} \\
+          \ganttbar[progress=0]{More Firmware}{1}{24} \\
+          \ganttbar[progress=0]{Testing}{1}{24} \\
+          \ganttbar[progress=0]{Reports}{1}{24} \\
+          \ganttbar[progress=0,name=poster]{Creating Poster}{21}{32} \\
+          \ganttbar[progress=0,name=presentations]{Presenting}{33}{40} \\
+          \ganttbar[progress=0,name=freedom]{Freedom}{41}{56} \\
+
+          \ganttlink[link type=f-s]{poster}{presentations}
+          \ganttlink[link type=f-s]{presentations}{freedom}
+        ]
+
+      \end{ganttchart}
+    }
+  \end{center}
+  \caption{Planning}
+  \label{planning}
+\end{figure}
+
+\end{document}
