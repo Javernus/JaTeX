@@ -41,6 +41,8 @@
 
 \date{\today}
 
+\bibliography{references.bib}
+
 \begin{document}
 \justify{}
 \maketitle
@@ -48,7 +50,7 @@
 Mesh Relay Chat, \textit{MRC} for short, is a new chat client that is
 disconnected, decentralised, secure and anonymous. It uses a mesh network on
 the Meshtastic framework to stay disconnected from the world-wide internet and
-instead use the \textit{LoRa} wireless frequencies to communicate. This allows
+instead uses the \textit{LoRa} wireless frequencies to communicate. This allows
 users to communicate when in relative proximity to one another, but the
 technology can also support long range communication over many kilometres. MRC
 is decentralised because of the homogeneous nature of the mesh, as each user
@@ -64,174 +66,84 @@ were on track for the front-end of the application, but setting up the mesh
 network took longer than expected, and building an interface between Python and
 Rust did not prove as easy as one would wish it was.
 
-All in all, we reached our MVP in week two, after which we made the decision to
-polish the application rather than add more features. This certainly should be
-any teams' first priority.
+All in all, we reached our \textit{MVP} in week two, after which we made the
+decision to polish the application rather than add more features. This
+certainly should be any teams' first priority.
 
-Along the way, we have iterated over our encryption choices, how we let the
-data in our application flow and the
+We decided early on to use \texttt{LoRa} as our wireless technology on which
+the mesh network functions. This was decided after much research into the
+different technologies we could have used. \texttt{Wi-Fi} was another
+contender, while \texttt{Bluetooth Low Energy} was quickly deemed insuffient
+for our use-case.
 
-\section*{Wi-Fi, BLE or LoRa}
+Along the way, we have iterated over our encryption choices, ascertaining that
+we utilise the highest encryption standards for the safety of the users' chat
+messages. A developmental choice later in the project reified this, as we put
+our attention to the integrity of our encryption methods.
 
-We have debated three wireless technologies, those being Wi-Fi, Bluetooth Low
-Energy and LoRa. There are significant upsides and downsides to using either of
-these technologies, as can be seen in Table \ref{wifiblelora}.
+The additional modules that we envisioned did not get materialised, however, as
+we focussed on making a solid application. There is no way to send images or
+files. Since text works, though, sending links should not be a problem, which
+can link to images and files.
 
-\begin{table}[h]
-  \centering
-  \begin{tabular}{r | c | c | c |}
-    \cline{2-4}
-                & BLE   & Wi-Fi & LoRa \\ \cline{2-4}
-    Range       & Short & Short & Long \\
-    Bandwidth   & Low   & High  & Tiny \\
-    Power Usage & Low   & High  & Low  \\ \cline{2-4}
-  \end{tabular}
-  \caption{Comparison between BLE, Wi-Fi and LoRa.}
-  \label{wifiblelora}
-\end{table}
+\section*{Minimum Viable Product}
 
-We are still working out which of these wireless technologies we want to
-utilise for MRC, taking into consideration the research we are doing and the
-requirements for MRC to function properly.
+MRC had a single hard requirement: being able to send a message from one app to
+another using the mesh network. This required a mesh network to function on the
+\texttt{ESP32} boards we had, \textit{Python} code to handle incoming messages
+and sending of messages, an interface between \textit{Rust} and Python to add
+the messages to the application database, \textit{Tauri} (written in Rust) to
+handle the database and updating of the front-end, and the front-end, made
+using \textit{SolidJS}, to display the messages and allow for joining groups
+and writing messages.
 
-\section*{Hardware support}
+\section*{The Code}
 
-Given the modularity that can be built into MRC, it is possible to create
-simple but effective embedded code for any device with the proper capabilities,
-like the wireless technology we end up choosing.
+I will not be sharing any code here. I made this decision consciously, as the
+code we wrote is highly dependent on the frameworks we utilised. SolidJS
+components do not function in Vue or React environments, and Tauri isn't
+NodeJS. I will go through a few of the choices and implications of these
+choices, however.
 
-Because of its wide availability, cost-effectiveness and ease-of-use, we have
-decided to use the ESP32 micro controller, which has bluetooth and wifi built
-in. ESP8266 can also be used, as it is the predecessor of the ESP32 and has
-almost an identical architecture. Additionally, some boards using the ESP32,
-like the TTGO LoRa32 OLED board, can be used for additional features ranging
-from better I/O to a built in screen to LoRa capabilities.
+We decided to use \textit{SolidJS}, a new and extremely fast front-end
+framework that prides itself on its reactivity. SolidJS (but also any other
+framework) allowed us to write components to use in our application, which is
+integral to the modularity of the code and the maintainability of it. Given its
+new status, it is not bound to old standards and legacy code, and it had many
+frameworks to use as a frame of reference. This led to a simple yet elegant and
+fast framework that allowed us to handle states, resources and effects
+intuitively.
 
-\section*{Realism and alternatives}
+Underneath SolidJS, we ran \textit{Tauri}; the back-end. It handles the app,
+window creation, and back-end tasks such as communicating with files or
+streams. Tauri is written in Rust, a language that handles memory very
+efficiently and is able to run exceptionally fast. Tauri implemented
+straightforward ways of communicating both from front-end to back-end and vice
+versa. It also allowed us to do the many things Rust also allows, using
+dependencies.
 
-Given the possible complexity of MRC, we will have to practice care to estimate
-the realism of the project. The main cause for complexity will be in
-limitations of bandwidth and in the difficulty of programming with the chosen
-wireless technology. We are accounting for hidden road blocks in our planning,
-leaving ample time for us to handle slow-downs and set-backs.
+Lastly, \textit{Meshtastic} was a choice I left up to the experts in the field.
+It turned out to run terrifically.
 
-We aim to have a product by week one, leaving week two for testing, bug fixing,
-polishing and if time allows it, creating firmware for more devices so they can
-also utilise the MRC network. It also grants us generous time to invest in
-writing our individual reports.
+\section*{The Team}
 
-Week one focusses on UI and setting up the Mesh Network, of which implementing
-the Host of the MRC is part. Then, encryption and add-on modules can be built
-to allow extra functionality like sending images, audio.
+I cannot be more happy with the team. Each of us took a part of the application
+and took responsibility for it. Scott and Merijn did quite a bit of research on
+which wireless technology we should use. Scott then went on to get the mesh
+network working while Merijn worked on the link with Rust. Ilya took it upon
+him to work on encryption and learnt to use Rust from scratch. I worked
+primarily on getting the front-end looking good and kept everything sailing
+smoothly, helping out where necessary. The communication in our team was
+top-notch, as we actively discussed decisions and asked questions or help.
 
-To ascertain a project, we thought of a backup plan. The backup plan entails
-the making of a piece of hardware capable of scrambling audio input from a
-microphone. This is done so any internet-connected device does not have access
-to the original audio in any way, shape or form.
+I believe everybody has put their all into this project and worked at their
+peak, which resulted in a compelling product. None of us slacked off in any way
+and the contribution of all of us was integral to the functioning of our
+product.
 
-\section*{Roles}
+\section*{Bibliography}
 
-To ascertain a fluid and effective development sprint, we have decided to
-create roles with responsibilities.
-
-The Product Manager keeps track of the state of the project and must make sure
-to uphold the progress. They do not deal with the code written, but the product
-as it will be used. This role is given to ....
-
-The Code Manager upholds the quality of the code. They manage the git
-environment and are the only person allowed to merge Pull Requests. This role
-is handed to Jake.
-
-\section*{Planning}
-
-The planning can be found in Figure \ref{planning}.
-
-\begin{figure}[!ht]
-  \begin{center}
-    \centerline{
-      \begin{ganttchart}[
-          y unit title=0.5cm,
-          y unit chart=0.5cm,
-          x unit=0.25cm,
-          canvas/.style={fill={rgb,255:red,19;green,38;blue,42},draw={rgb,255:red,141;green,178;blue,185}},
-          title label font=\color{rgb,255:red,240;green,255;blue,255},
-          title/.style={fill={rgb,255:red,19;green,38;blue,42}},
-          link/.style={->,draw={rgb,255:red,224;green,16;blue,34}},
-          title label anchor/.style={below=-1.6ex},
-          title height=1,
-          progress label text={},
-          group right shift=0,
-          group top shift=.6,
-          bar height=0.7,
-          bar/.append style={fill={rgb,255:red,95;green,150;blue,125}},
-          bar incomplete/.append style={fill={rgb,255:red,89;green,100;blue,112}},
-          group height=[.3]{1}{56},
-
-          \setganttlinklabel{f-s}{}
-          %labels
-          \gantttitle{Project}{56} \\
-          \gantttitle{Preparations}{56} \\
-
-          %tasks
-          \ganttbar[progress=60]{Audio Research}{1}{56} \\
-          \ganttbar[progress=100]{BLE Research}{1}{56} \\
-          \ganttbar[progress=60]{Wi-Fi Research}{1}{56} \\
-          \ganttbar[progress=100]{LoRa Research}{1}{56} \\
-          \ganttbar[progress=90]{Projectplan}{1}{56} \\
-
-          \gantttitle{}{56} \\
-          \gantttitle{Week 1}{56} \\
-          \gantttitle{Day 1}{8}
-          \gantttitle{Day 2}{8}
-          \gantttitle{Day 3}{8}
-          \gantttitle{Day 4}{8}
-          \gantttitle{Day 5}{8}
-          \gantttitle{Weekend}{16} \\
-
-          %tasks
-          \ganttbar[progress=0,name=meshnw]{Mesh Network}{3}{16} \\
-          \ganttbar[progress=0,name=mnwpolish]{Mesh Network Polish}{17}{24} \\
-          \ganttbar[progress=0,name=hostimplementation]{Host Implementation}{13}{24} \\
-          \ganttbar[progress=0,name=uife]{UI Frontend}{3}{16} \\
-          \ganttbar[progress=0,name=uibe]{UI Backend}{21}{32} \\
-          \ganttbar[progress=0,name=encryption]{Encryption}{13}{32} \\
-          \ganttbar[progress=0]{Modules}{21}{40} \\
-
-          %relations
-          \ganttlink[link type=f-s]{meshnw}{mnwpolish}
-          \ganttlink{meshnw}{hostimplementation}
-          \ganttlink{hostimplementation}{uibe}
-          \ganttlink{uife}{uibe}
-          \ganttlink{hostimplementation}{encryption}
-
-          \gantttitle{}{56} \\
-          \gantttitle{Week 2}{56} \\
-          \gantttitle{Day 8}{8}
-          \gantttitle{Day 9}{8}
-          \gantttitle{Day 10}{8}
-          \gantttitle{Day 11}{8}
-          \gantttitle{Day 12}{8}
-          \gantttitle{Holidays!}{16} \\
-
-          %tasks
-          \ganttbar[progress=0]{Polishing}{1}{24} \\
-          \ganttbar[progress=0]{Bug fixing}{1}{24} \\
-          \ganttbar[progress=0]{More Firmware}{1}{24} \\
-          \ganttbar[progress=0]{Testing}{1}{24} \\
-          \ganttbar[progress=0]{Reports}{1}{24} \\
-          \ganttbar[progress=0,name=poster]{Creating Poster}{21}{32} \\
-          \ganttbar[progress=0,name=presentations]{Presenting}{33}{40} \\
-          \ganttbar[progress=0,name=freedom]{Freedom}{41}{56} \\
-
-          \ganttlink[link type=f-s]{poster}{presentations}
-          \ganttlink[link type=f-s]{presentations}{freedom}
-        ]
-
-      \end{ganttchart}
-    }
-  \end{center}
-  \caption{Planning}
-  \label{planning}
-\end{figure}
+\nocite{*}
+\printbibliography[heading=none]
 
 \end{document}
